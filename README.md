@@ -27,5 +27,5 @@ void main() {
 - `Tuple`s (only while decoding)
 
 > **Warning**
-> `BigInt`s are serialized into `String`s when dart is transpiled to javascript, and `int`s when 64-bits ints are supported.
-> This behaviour may change later.
+> `BigInt`s are serialized into `String`s when dart is transpiled to javascript, and `int`s when 64-bits ints are supported
+> and the `BigInt` is less than `maxIntValue`, otherwise, a `BigInt` is returned. 
