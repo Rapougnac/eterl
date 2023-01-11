@@ -1,5 +1,5 @@
 name: eterl
-description: A sample command-line application.
+description: Eterl is a fast packer and unpacker for the External Term Erlang Format (version 131).
 version: 1.0.0
 
 environment:
