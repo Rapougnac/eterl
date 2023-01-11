@@ -8,7 +8,10 @@ import 'package:eterl/src/encoder.dart';
 class Eterl {
   const Eterl._();
 
-  /// Unpack the provided packet to [T].
+  /// Unpack encoded data from the Erlang External Term Format into a Dart object.
+  ///
+  /// The decoded data is then returned as a Dart object.
+  /// The type of the returned object is specified as [T].
   T unpack<T extends Object?>(List<int> toDecode) {
     final decoder = Decoder(Uint8List.fromList(toDecode));
     var decoded = decoder.decode();
@@ -45,12 +48,12 @@ class EterlDecoder<T> extends Converter<List<int>, T> {
 const eterl = Eterl._();
 
 /// Shorthand for [eterl.unpack].
-/// 
+///
 /// This is useful when a shadowing `eterl` variable is present.
 T eterlUnpack<T extends Object?>(List<int> toDecode) => eterl.unpack(toDecode);
 
 /// Shorthand for [eterl.pack].
-/// 
+///
 /// This is useful when a shadowing `eterl` variable is present.
 Uint8List eterlPack<T extends Object?>(T toEncode,
         [int defaultBufferSize = Encoder.defaultBufferSize]) =>
