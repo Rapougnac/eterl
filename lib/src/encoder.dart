@@ -9,7 +9,7 @@ class Encoder {
   static const int defaultBufferSize = 128;
 
   late Uint8List _buffer;
-  late final ByteData _bytes;
+  late ByteData _bytes;
   int _offset = 1;
 
   Encoder([int defaultBufferSize = Encoder.defaultBufferSize]) {
@@ -26,6 +26,7 @@ class Encoder {
       copyList
           .addAll((_buffer = Uint8List(math.max(capacity * 2, minCapacity))));
       _buffer = Uint8List.fromList(copyList);
+      _bytes = _buffer.buffer.asByteData();
     }
   }
 
