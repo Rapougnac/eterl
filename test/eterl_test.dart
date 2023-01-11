@@ -14,8 +14,8 @@ const helloWorldListWithNull = [1, 2, 3, 4, 5, 0, 6, 7, 8, 9, 10, 11];
 void main() {
   group('Decoder', () {
     test('Short list via string with null byte', () {
-      final unpacked = eterl
-          .unpack<List<int>>([131, 107, 0, 12, ...helloWorldListWithNull]);
+      final unpacked =
+          eterl.unpack<List<int>>([131, 107, 0, 12, ...helloWorldListWithNull]);
       expect(unpacked, equals(helloWorldListWithNull));
     });
 
@@ -84,12 +84,28 @@ void main() {
         0,
         0,
         3,
+        109,
+        0,
+        0,
+        0,
+        1,
+        97,
+        97,
+        1,
+        109,
+        0,
+        0,
+        0,
+        1,
+        50,
         97,
         2,
-        97,
-        2,
-        97,
-        3,
+        109,
+        0,
+        0,
+        0,
+        1,
+        51,
         108,
         0,
         0,
@@ -101,15 +117,7 @@ void main() {
         2,
         97,
         3,
-        106,
-        109,
-        0,
-        0,
-        0,
-        1,
-        97,
-        97,
-        1,
+        106
       ];
 
       expect(
@@ -117,8 +125,8 @@ void main() {
         equals(
           {
             'a': 1,
-            2: 2,
-            3: [1, 2, 3]
+            '2': 2,
+            '3': [1, 2, 3]
           },
         ),
       );
@@ -253,8 +261,7 @@ void main() {
         expect(eterl.unpack<int>([131, 98, 0, 0, 4, 0]), equals(1024));
       });
       test('Int32 - 2', () {
-        expect(
-            eterl.unpack<int>([131, 98, 128, 0, 0, 0]), equals(-2147483648));
+        expect(eterl.unpack<int>([131, 98, 128, 0, 0, 0]), equals(-2147483648));
       });
       test('Int32 - 3', () {
         expect(eterl.unpack<int>([131, 98, 127, 255, 255, 255]),
@@ -264,16 +271,14 @@ void main() {
 
     group('Small BigInts', () {
       test('Small BigInts - 1', () {
-        expect(
-            eterl.unpack([131, 110, 4, 1, 1, 2, 3, 4]), equals('-67305985'));
+        expect(eterl.unpack([131, 110, 4, 1, 1, 2, 3, 4]), equals(-67305985));
       });
       test('Small BigInts - 2', () {
-        expect(
-            eterl.unpack([131, 110, 4, 0, 1, 2, 3, 4]), equals('67305985'));
+        expect(eterl.unpack([131, 110, 4, 0, 1, 2, 3, 4]), equals(67305985));
       });
       test('Small BigInts - 3', () {
         expect(eterl.unpack([131, 110, 10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
-            equals('47390263963055590408705'));
+            equals(BigInt.parse('47390263963055590408705')));
       });
     });
 
@@ -545,13 +550,14 @@ void main() {
           4,
           88,
         ];
-        expect(eterl.unpack(data), equals('1' * 617));
+        expect(eterl.unpack(data), equals(BigInt.parse('1' * 617)));
       });
 
       test('Large BigInt - 2', () {
         final uin8ListData = Uint8List.fromList(data);
         uin8ListData.buffer.asByteData().setUint8(6, 1);
-        expect(eterl.unpack(uin8ListData), equals('-${'1' * 617}'));
+        expect(
+            eterl.unpack(uin8ListData), equals(BigInt.parse('-${'1' * 617}')));
       });
     });
 
@@ -844,11 +850,11 @@ void main() {
 
     group('BigInts', () {
       test('BigInt - 1', () {
-        final expected = [131, 110, 0, 0, 2, 0, 0, 128];
-        expect(expected, equals(eterl.pack(BigInt.parse('1' * 128))));
+        final expected = [131, 98, 128, 0, 0, 0];
+        expect(expected, equals(eterl.pack(pow(2, 31))));
       });
       test('BigInt - 2', () {
-        final expected = [131, 110, 4, 0, 0, 0, 0, 128];
+        final expected = [131, 98, 127, 255, 255, 255];
         expect(expected, equals(eterl.pack(-1 - pow(2, 31))));
       });
       test('BigInt - 3', () {
@@ -861,59 +867,58 @@ void main() {
       });
       test('BigInt - 5', () {
         final expected = [131, 110, 8, 1, 1, 2, 3, 4, 5, 6, 7, 8];
-        expect(
-            expected, equals(eterl.pack(BigInt.from(-578437695752307201))));
+        expect(expected, equals(eterl.pack(BigInt.from(-578437695752307201))));
       });
       test('BigInt - 6', () {
         final expected = [131, 110, 8, 0, 1, 2, 3, 4, 5, 6, 7, 8];
         expect(expected, equals(eterl.pack(BigInt.from(578437695752307201))));
       });
-    }, skip: 'Fuck');
-  });
+    });
 
-  test('List', () {
-    final expected = [
-      131,
-      108,
-      0,
-      0,
-      0,
-      4,
-      97,
-      1,
-      109,
-      0,
-      0,
-      0,
-      3,
-      116,
-      119,
-      111,
-      70,
-      64,
-      8,
-      204,
-      204,
-      204,
-      204,
-      204,
-      205,
-      109,
-      0,
-      0,
-      0,
-      4,
-      102,
-      111,
-      117,
-      114,
-      106,
-    ];
+    test('List', () {
+      final expected = [
+        131,
+        108,
+        0,
+        0,
+        0,
+        4,
+        97,
+        1,
+        109,
+        0,
+        0,
+        0,
+        3,
+        116,
+        119,
+        111,
+        70,
+        64,
+        8,
+        204,
+        204,
+        204,
+        204,
+        204,
+        205,
+        109,
+        0,
+        0,
+        0,
+        4,
+        102,
+        111,
+        117,
+        114,
+        106,
+      ];
 
-    expect(expected, equals(eterl.pack([1, 'two', 3.1, 'four'])));
-  });
+      expect(expected, equals(eterl.pack([1, 'two', 3.1, 'four'])));
+    });
 
-  test('Empty list', () {
-    expect([131, 106], equals(eterl.pack([])));
+    test('Empty list', () {
+      expect([131, 106], equals(eterl.pack([])));
+    });
   });
 }
