@@ -22,10 +22,12 @@ class Encoder {
     final capacity = _buffer.length;
     final minCapacity = _offset + size + 1;
     if (minCapacity > capacity) {
-      final copyList = _buffer.toList();
-      copyList
-          .addAll((_buffer = Uint8List(math.max(capacity * 2, minCapacity))));
-      _buffer = Uint8List.fromList(copyList);
+      final len = math.max(capacity * 2, minCapacity);
+      final oldBuffer = _buffer;
+      _buffer = Uint8List(len);
+      for (int i = 0; i < oldBuffer.length; i++) {
+        _buffer[i] = oldBuffer[i];
+      }
       _bytes = _buffer.buffer.asByteData();
     }
   }
@@ -142,32 +144,33 @@ class Encoder {
   void _encodeBigInt(BigInt value) {
     _ensure(1 + 1 + 1);
     _append8(smallBigExt);
+
     final byteLengthIndex = _offset++;
     _append8(value < BigInt.zero ? 1 : 0);
     var ull = value < BigInt.zero ? -value : value;
     var byteLength = 0;
     while (ull > BigInt.zero) {
       _ensure(1);
-      _append8((ull & BigInt.parse(0xff.toString())).toInt());
+      _append8((ull & BigInt.from(0xff)).toInt());
       ull >>= 8;
       byteLength++;
     }
 
     if (byteLength < 256) {
-      _bytes.setUint8(byteLength, byteLengthIndex);
+      _bytes.setUint8(byteLengthIndex, byteLength);
       return;
     }
 
-    _bytes.setUint8(largeBigExt, byteLengthIndex - 1);
+    _bytes.setUint8(byteLengthIndex - 1, largeBigExt);
 
     _ensure(3);
-    for (var i = 0; i >= byteLengthIndex; i++) {
+    for (var i = _offset; i >= byteLengthIndex; i--) {
       _buffer[i + 3] = _buffer[i];
     }
 
     _offset += 3;
 
-    _bytes.setUint32(byteLength, byteLengthIndex);
+    _bytes.setUint32(byteLengthIndex, byteLength);
   }
 
   void _encodeAtom(String atom) {

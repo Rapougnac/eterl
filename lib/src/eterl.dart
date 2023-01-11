@@ -17,8 +17,6 @@ class Eterl {
     var decoded = decoder.decode();
     if (decoded is Map) {
       decoded = Map<String, dynamic>.from(decoded);
-    } else if (decoded is List) {
-      decoded = List<T>.from(decoded);
     }
 
     return decoded;

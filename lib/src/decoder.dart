@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:decimal/decimal.dart';
 import 'package:eterl/src/constants.dart';
 
+import 'max_int_value.dart' if (dart.library.io) 'max_int_value_vm.dart';
+
 class Decoder {
   int _offset = 1;
 
@@ -69,7 +71,13 @@ class Decoder {
         if (const bool.fromEnvironment('dart.library.js_util')) {
           return _decodeBigInt(BigInt.from(_read8())).toString();
         } else {
-          return _decodeBigInt(BigInt.from(_read8())).toInt();
+          final bigInt = _decodeBigInt(BigInt.from(_read8()));
+
+          if (bigInt > BigInt.from(maxIntValue)) {
+            return bigInt;
+          } else {
+            return bigInt.toInt();
+          }
         }
       case largeBigExt:
         return _decodeBigInt(BigInt.from(_read32()));
@@ -113,7 +121,7 @@ class Decoder {
   BigInt _decodeBigInt(BigInt len) {
     final sign = _read8();
     // I'm missing the n notation :(
-    var val = BigInt.from(0);
+    var val = BigInt.zero;
     for (var i = BigInt.zero; i < len; i += BigInt.one) {
       val |= BigInt.from((_read8())) << (i * BigInt.from(8)).toInt();
     }
