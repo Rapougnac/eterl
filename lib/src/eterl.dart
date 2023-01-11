@@ -15,9 +15,6 @@ class Eterl {
   T unpack<T extends Object?>(List<int> toDecode) {
     final decoder = Decoder(Uint8List.fromList(toDecode));
     var decoded = decoder.decode();
-    if (decoded is Map) {
-      decoded = Map<String, dynamic>.from(decoded);
-    }
 
     return decoded;
   }
