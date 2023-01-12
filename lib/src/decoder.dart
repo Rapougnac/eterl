@@ -44,10 +44,10 @@ class Decoder {
     switch (tag) {
       case mapExt:
         final len = _read32();
-        final map = <dynamic, dynamic>{};
+        final map = <String, dynamic>{};
 
         for (int i = 0; i < len; i++) {
-          map[decode()] = decode();
+          map[decode().toString()] = decode();
         }
 
         return map;
