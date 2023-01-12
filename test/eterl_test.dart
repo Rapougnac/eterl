@@ -828,8 +828,15 @@ void main() {
     });
 
     test('Small ints', () {
-      // Keep loop?
-    }, skip: 'Add a way to go to 256 ints while testing');
+      final result = <List<int>>[];
+
+      for (int i = 0; i < 256; i++) {
+        final data = eterl.pack(i);
+        result.add(data);
+      }
+
+      expect(result, equals(List.generate(256, (index) => [131, 97, index])));
+    });
 
     group('Int32', () {
       test('Int32 - 1', () {
