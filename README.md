@@ -8,7 +8,7 @@ import 'package:eterl/eterl.dart';
 
 void main() {
     final data = [{'hello': ['eterl', 1,2,3], 'l': [{'im': 'nested', 'i': {'also': 'support unicode 💀🗿🥀 èè¨àà¨ü!ääüäöä£üüöäüéèéè>>>><<<<>>~~~'}}]}];
-    final packed = eterl.pack(data, 200);
+    final packed = eterl.pack(data);
     final unpacked = eterl.unpack(packed);
     print(unpacked);
 }
