@@ -1,3 +1,6 @@
+# 1.0.2
+- Fix list creation and removal of `decimal` package.
+
 # 1.0.1
 - Fix incorrect type casting.
 
