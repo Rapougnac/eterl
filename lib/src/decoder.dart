@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:decimal/decimal.dart';
 import 'package:eterl/src/constants.dart';
 
 import 'max_int_value.dart' if (dart.library.io) 'max_int_value_vm.dart';
@@ -99,17 +98,16 @@ class Decoder {
         final len = _read16();
         return _buffer.sublist(_offset, (_offset += len));
       case floatExt:
-        return Decimal.parse(_decodeString(31, ascii).replaceAll('\u0000', ''))
-            .toDouble();
+        return num.parse(_decodeString(31, ascii).replaceAll('\u0000', ''));
       default:
         throw Exception('Unsupported tag ($tag)');
     }
   }
 
   List _decodeList(int len) {
-    final list = List<dynamic>.filled(len, null);
+    final list = [];
     for (int i = 0; i < len; i++) {
-      list[i] = decode();
+      list.add(decode());
     }
 
     return list;

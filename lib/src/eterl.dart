@@ -14,11 +14,12 @@ class Eterl {
   /// The type of the returned object is specified as [T].
   T unpack<T extends Object?>(List<int> toDecode) {
     final decoder = Decoder(Uint8List.fromList(toDecode));
-    var decoded = decoder.decode();
 
-    return decoded;
+    return decoder.decode() as T;
   }
 
+  /// Pack a Dart object into the Erlang External Term Format.
+  /// The encoded data is then returned as a [Uint8List].
   Uint8List pack<T extends Object?>(T toEncode,
       [int defaultBufferSize = Encoder.defaultBufferSize]) {
     final encoder = Encoder(defaultBufferSize);
@@ -26,10 +27,14 @@ class Eterl {
     return encoder.encode(toEncode);
   }
 
-  EterlDecoder<T> unpacker<T extends Object?>() => EterlDecoder<T>();
+  /// Returns an [EterlDecoder] that can be used to decode data from the Erlang.
+  EterlDecoder<T> unpacker<T extends Object?>() => _EterlDecoderImpl<T>();
 }
 
-class EterlDecoder<T> extends Converter<List<int>, T> {
+abstract class EterlDecoder<T> extends Converter<List<int>, T> {}
+
+class _EterlDecoderImpl<T> extends Converter<List<int>, T>
+    implements EterlDecoder<T> {
   @override
   T convert(List<int> input) => eterl.unpack(input);
 
