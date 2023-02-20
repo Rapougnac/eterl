@@ -1,6 +1,6 @@
 name: eterl
 description: Eterl is a fast packer and unpacker for the External Term Erlang Format (version 131).
-version: 1.0.1
+version: 1.0.2
 repository: https://github.com/Rapougnac/eterl
 issue_tracker: https://github.com/Rapougnac/eterl/issues
 
@@ -11,7 +11,3 @@ dev_dependencies:
   benchmark: ^0.3.0
   lints: ^2.0.0
   test: ^1.16.0
-
-dependencies:
-  # Used to parse ints with exponential numbers.
-  decimal: ^2.3.2
