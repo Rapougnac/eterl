@@ -190,12 +190,9 @@ class Encoder {
     _ensure(1 + 4 + stringLength);
     _append8(binaryExt);
     _append32(stringLength);
-    // final copyList = _buffer.toList();
     for (int i = 0; i < encoded.length; i++) {
       _buffer[_offset + i] = encoded[i];
     }
-    // _buffer = Uint8List.fromList(copyList);
-    // Clone
     _offset += stringLength;
   }
 }
