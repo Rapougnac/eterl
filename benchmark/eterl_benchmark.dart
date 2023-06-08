@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:benchmark/benchmark.dart';
+import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:eterl/eterl.dart';
 
-final parsedData = {
+const data = {
   'a': 1,
   'b': {
     'c': [3, 4, 5],
@@ -28,27 +28,29 @@ final parsedData = {
   '6': null,
 };
 
-void main() {
-  final data = json.encode(parsedData);
-  final encodedData = eterl.pack(parsedData, 500);
-  benchmark('json.decode', () => json.decode(data));
-  benchmark('json.encode', () => json.encode(parsedData));
+class EterlBenchmark extends BenchmarkBase {
+  const EterlBenchmark() : super('Eterl');
 
-  benchmark('eterl.unpack', () => eterl.unpack(encodedData));
-  benchmark('eterl.pack', () => eterl.pack(parsedData, 500));
-  benchmark('eterl.pack known length',
-      () => eterl.pack(parsedData, encodedData.length));
+  @override
+  void run() {
+    final encoded = eterl.pack(data);
+    final decoded = eterl.unpack(encoded);
+    if (decoded.toString() != data.toString()) {
+      throw Exception('The decoded data is not equal to the original data');
+    }
+  }
+
+  @override
+  void setup() {}
+
+  @override
+  void teardown() {}
+
+  static void main() {
+    const EterlBenchmark().report();
+  }
 }
-/**
- *  DONE  ./benchmarks/erlpack_benchmark.dart (11 s)
- ✓ json.decode (186 us)
- ✓ json.encode (147 us)
- ✓ eterl.unpack (118 us)
- ✓ eterl.pack (159 us)
- ✓ eterl.pack known length (314 us)
 
-Benchmark suites: 1 passed, 1 total
-Benchmarks:       5 passed, 5 total
-Time:             11 s
-Ran all benchmark suites.
- */
+void main() {
+  EterlBenchmark.main();
+}
