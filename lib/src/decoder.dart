@@ -18,7 +18,7 @@ class Decoder {
     final bufferVersion = _buffer.buffer.asByteData().getUint8(0);
 
     if (bufferVersion != version) {
-      throw Exception('The version is un supported'
+      throw Exception('The version is unsupported'
           '(found: $bufferVersion, required: $version)');
     }
   }
@@ -68,7 +68,7 @@ class Decoder {
         return _read8();
       case smallBigExt:
         if (const bool.fromEnvironment('dart.library.js_util')) {
-          return _decodeBigInt(BigInt.from(_read8())).toString();
+          return _decodeBigInt(BigInt.from(_read8()));
         } else {
           final bigInt = _decodeBigInt(BigInt.from(_read8()));
 
@@ -81,9 +81,9 @@ class Decoder {
       case largeBigExt:
         return _decodeBigInt(BigInt.from(_read32()));
       case newFloatExt:
-        final val = _bytes.getFloat64(_offset);
+        final value = _bytes.getFloat64(_offset);
         _offset += 8;
-        return val;
+        return value;
       case smallTupleExt:
         return _decodeList(_read8());
       case largeTupleExt:
