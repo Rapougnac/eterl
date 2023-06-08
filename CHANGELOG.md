@@ -1,3 +1,7 @@
+# 1.0.3
+- Decode JS `BigInt`s as `BigInt`s instead of string.
+- Fix some consistency issues.
+
 # 1.0.2
 - Fix list creation and removal of `decimal` package.
 
