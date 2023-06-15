@@ -690,6 +690,14 @@ void main() {
     test('Wrong version', () {
       expect(() => eterl.unpack([130]), throwsException);
     });
+
+    group('as StreamTransformer', () {
+      test('correctly closes', () {
+        final stream = Stream<List<int>>.empty();
+
+        expect(stream.transform(eterl.unpacker()), emitsDone);
+      });
+    });
   });
 
   group('Encoder', () {
