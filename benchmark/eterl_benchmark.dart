@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:eterl/eterl.dart';
 

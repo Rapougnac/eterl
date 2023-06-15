@@ -69,7 +69,9 @@ class _EterlConversionSink<T> extends ByteConversionSink {
   }
 
   @override
-  void close() {}
+  void close() {
+    _sink.close();
+  }
 
   @override
   void addSlice(List<int> chunk, int startIndex, int endIndex, bool isLast) {
